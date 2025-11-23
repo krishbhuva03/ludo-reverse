@@ -1,0 +1,227 @@
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+  --primary-color: #4a90e2;
+  --secondary-color: #f5a623;
+  --background-color: #f0f2f5;
+  --card-background: #ffffff;
+  --text-color: #333;
+  --light-text-color: #777;
+  --border-color: #e0e0e0;
+  --shadow-color: rgba(0, 0, 0, 0.1);
+  --font-main: 'Poppins', sans-serif;
+  --font-title: 'Fredoka One', cursive;
+}
+
+body {
+  font-family: var(--font-main);
+  background: var(--background-color);
+  color: var(--text-color);
+  line-height: 1.6;
+}
+
+.setup-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.setup-card {
+  background: var(--card-background);
+  padding: 2.5rem 1.2rem;
+  border-radius: 1.875rem;
+  box-shadow: 0 1.5rem 3rem var(--shadow-color);
+  width: 100%;
+  max-width: 34.375rem;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  animation: fadeIn 0.5s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.setup-title {
+  font-family: var(--font-title);
+  font-size: clamp(2rem, 4vw, 2.5rem);
+  color: var(--primary-color);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.ludo-icon {
+  font-size: clamp(2.5rem, 5vw, 3rem);
+  color: var(--secondary-color);
+}
+
+.setup-subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.1rem);
+  color: var(--light-text-color);
+  margin-bottom: 2.2rem;
+}
+
+.setup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.875rem;
+}
+
+.form-section-title {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 1rem;
+  text-align: left;
+}
+
+.player-count-selector {
+  display: flex;
+  justify-content: space-around;
+  gap: 1rem;
+  background: #f8f9fa;
+  padding: 0.625rem;
+  border-radius: 1rem;
+}
+
+.player-count-button {
+  flex: 1;
+  padding: 1rem 0.625rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border: 2px solid transparent;
+  border-radius: 0.625rem;
+  background-color: #fff;
+  color: var(--light-text-color);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0.25rem 0.625rem rgba(0,0,0,0.05);
+}
+
+.player-count-button.active {
+  color: #fff;
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-2px);
+  box-shadow: 0 0.5rem 1.25rem rgba(74, 144, 226, 0.3);
+}
+
+.player-inputs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+  width: 100%;
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+.player-input-group {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.player-avatar {
+  width: 3.125rem;
+  height: 3.125rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+  flex-shrink: 0;
+}
+
+.player-avatar.player-1 { background-color: #d0021b; }
+.player-avatar.player-2 { background-color: #f5a623; }
+.player-avatar.player-3 { background-color: #4a90e2; }
+.player-avatar.player-4 { background-color: #7ed321; }
+
+.setup-input {
+  flex: 1;
+  padding: 1rem 1.25rem;
+  border: 2px solid var(--border-color);
+  border-radius: 0.75rem;
+  font-size: 1rem;
+  transition: all 0.3s;
+  background-color: #f9f9f9;
+  font-weight: 500;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.setup-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  background-color: #fff;
+  box-shadow: 0 0 1rem rgba(74, 144, 226, 0.2);
+}
+
+.start-game-button {
+  background: linear-gradient(45deg, var(--primary-color), #6db3f2);
+  color: white;
+  border: none;
+  padding: 1.125rem;
+  font-size: 1.3rem;
+  font-weight: 700;
+  border-radius: 1rem;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  margin-top: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  box-shadow: 0 0.625rem 1.5rem rgba(74, 144, 226, 0.25);
+}
+
+.start-game-button:hover:not(:disabled) {
+  transform: translateY(-3px);
+  box-shadow: 0 1rem 2.2rem rgba(74, 144, 226, 0.35);
+}
+
+.start-game-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 600px) {
+  .setup-card {
+    padding: 2rem;
+  }
+
+  .setup-title {
+    gap: 0.75rem;
+  }
+
+  .player-count-selector {
+    flex-direction: column;
+  }
+}
+
+@media (min-width: 600px) {
+  .player-inputs {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 100%;
+    gap: 1.25rem;
+  }
+}

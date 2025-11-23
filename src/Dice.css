@@ -1,0 +1,39 @@
+.dice {
+  width: 80px;
+  height: 80px;
+  background-color: var(--color-surface);
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 36px;
+  font-weight: bold;
+  color: var(--color-primary);
+  box-shadow: 0 4px 16px 0 #2f80ed22, 0 1.5px 4px 0 #23272f11;
+  transition: box-shadow 0.18s;
+}
+.dice:hover, .dice:focus {
+  box-shadow: 0 6px 24px 0 #2f80ed44, 0 2px 8px 0 #23272f22;
+}
+
+.dice.rolling {
+  animation: roll 0.5s ease-in-out;
+}
+
+@keyframes roll {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (max-width: 600px) {
+  .dice {
+    width: 48px;
+    height: 48px;
+    font-size: 22px;
+    border-radius: 8px;
+  }
+}
