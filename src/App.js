@@ -69,10 +69,10 @@ function App() {
   function isPlayerWinner(playerNum) {
     const color = playerColors[playerNum];
     const finalCells = {
-      red: 'rh6',
-      green: 'gh6',
-      yellow: 'yh6',
-      blue: 'bh6',
+      green: 'rh6',
+      yellow: 'gh6',
+      blue: 'yh6',
+      red: 'bh6',
     };
     return Object.values(tokenPositions[color]).every(pos => pos === finalCells[color]);
   }
@@ -189,10 +189,10 @@ function App() {
 
       // Extra turn logic: check if token landed on its final cell
       const finalCells = {
-        red: 'rh6',
-        green: 'gh6',
-        yellow: 'yh6',
-        blue: 'bh6',
+        green: 'rh6',
+        yellow: 'gh6',
+        blue: 'yh6',
+        red: 'bh6',
       };
       let extraTurns = 0;
       if (newPositionId === finalCells[color]) {
@@ -273,10 +273,10 @@ function App() {
 
     // Extra turn logic for animated moves
     const finalCells = {
-      red: 'rh6',
-      green: 'gh6',
-      yellow: 'yh6',
-      blue: 'bh6',
+      green: 'rh6',
+      yellow: 'gh6',
+      blue: 'yh6',
+      red: 'bh6',
     };
     let extraTurns = 0;
     if (newPositionId === finalCells[color]) {

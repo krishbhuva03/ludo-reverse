@@ -94,15 +94,49 @@ function Cell({ r, c, highlight }) {
   );
 }
 
-function Token({ color, number, isMovable, onClick, style, animate }) {
-  // SVG Ludo piece
+// Cyberpunk Hexagon Token SVG
+function CyberHexagon({ colorString }) {
   const pieceColor = {
-    red: '#e63946',
-    green: '#39a56a',
-    yellow: '#f3a712',
-    blue: '#2f80ed',
-  }[color.toLowerCase()] || '#888';
-  const textColor = color.toLowerCase() === 'yellow' ? '#222' : '#fff';
+    red: 'var(--color-accent)',
+    green: 'var(--color-success)',
+    yellow: 'var(--color-secondary)',
+    blue: 'var(--color-primary)',
+  }[colorString.toLowerCase()] || '#888';
+
+  return (
+    <svg width="100%" height="100%" viewBox="0 0 100 100" aria-hidden="true" style={{ overflow: 'visible', filter: 'drop-shadow(0 4px 6px rgba(0,0,0,0.6))' }}>
+      <defs>
+        <filter id={`glow-${colorString}`} x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="5" result="blur" />
+          <feComposite in="SourceGraphic" in2="blur" operator="over" />
+        </filter>
+      </defs>
+      {/* Outer Hexagon */}
+      <polygon 
+        points="50,5 89,27.5 89,72.5 50,95 11,72.5 11,27.5" 
+        fill="rgba(5, 8, 12, 0.9)" 
+        stroke={pieceColor} 
+        strokeWidth="4" 
+        filter={`url(#glow-${colorString})`}
+      />
+      {/* Inner Tech Decoration */}
+      <polygon 
+        points="50,18 78,34 78,66 50,82 22,66 22,34" 
+        fill="none" 
+        stroke={pieceColor} 
+        strokeWidth="2" 
+        strokeDasharray="8 6" 
+        opacity="0.7"
+      />
+      {/* Center Background for Text */}
+      <circle cx="50" cy="50" r="18" fill={pieceColor} opacity="0.2" />
+    </svg>
+  );
+}
+
+function Token({ color, number, isMovable, onClick, style, animate }) {
+  const textColor = color.toLowerCase() === 'yellow' ? '#fcee0a' : '#fff'; // ensure yellow text is readable / neon
+  
   return (
     <div
       className={`token token-${color.toLowerCase()} ${isMovable ? 'movable' : ''} ${animate ? 'token-animate' : ''}`}
@@ -113,12 +147,10 @@ function Token({ color, number, isMovable, onClick, style, animate }) {
       aria-label={`Token ${color} ${number}${isMovable ? ' (movable)' : ''}`}
       onKeyDown={isMovable ? (e) => { if (e.key === 'Enter' || e.key === ' ') onClick(); } : undefined}
     >
-      <svg width="100%" height="100%" viewBox="0 0 40 40" aria-hidden="true">
-        <circle cx="20" cy="20" r="16" fill={pieceColor} stroke="#222" strokeWidth="2" />
-        <circle cx="20" cy="15" r="6" fill="#fff" fillOpacity="0.18" />
-        <circle cx="20" cy="20" r="10" fill="#fff" fillOpacity="0.08" />
-      </svg>
-      <span className="token-label" style={{ color: textColor }}>{color[0].toUpperCase()}{number}</span>
+      <CyberHexagon colorString={color} />
+      <span className="token-label" style={{ color: color.toLowerCase() === 'yellow' ? 'var(--color-secondary)' : '#fff' }}>
+        {color[0].toUpperCase()}{number}
+      </span>
     </div>
   );
 }
@@ -129,7 +161,7 @@ function TokensOnCell({ tokens, moveToken }) {
 
   let tokenStyle;
   if (count <= 1) {
-    tokenStyle = { width: '80%', height: '80%' };
+    tokenStyle = { width: '85%', height: '85%' };
   } else {
     const columns = count <= 4 ? 2 : Math.ceil(Math.sqrt(count));
     const rows = Math.ceil(count / columns);
@@ -175,7 +207,10 @@ function TokensInHome({ color, tokens, possibleMove, moveToken }) {
             className={`token token-${color.toLowerCase()} ${isMovable ? 'movable token-animate' : ''}`}
             onClick={handleClick}
           >
-            <span className="token-label">{color[0].toUpperCase()}{n}</span>
+            <CyberHexagon colorString={color} />
+            <span className="token-label" style={{ color: color.toLowerCase() === 'yellow' ? 'var(--color-secondary)' : '#fff' }}>
+              {color[0].toUpperCase()}{n}
+            </span>
           </div>
         )
       })}

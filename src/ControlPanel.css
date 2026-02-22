@@ -126,145 +126,303 @@
   box-shadow: inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff; /* Recessed effect */
 }
 
-.dice-action-section {
-  display: flex;
-  justify-content: center;
+/* Corner HUD wrapper absolutely positioned over the entire app */
+.control-panel-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
+  height: 100%;
+  pointer-events: none; /* Let clicks pass through to board */
+  z-index: 20;
 }
 
-.roll-dice-button {
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  background-color: #e0e0e0;
-  border: none;
-  font-size: 1.2em;
-  font-weight: bold;
-  color: #333;
-  cursor: pointer;
-  box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff; /* Extruded effect */
-  transition: all 0.2s ease;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
+/* Base Corner HUD Styles */
+.player-corner {
+  position: absolute;
+  width: 280px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  padding: 15px;
+  pointer-events: auto; /* Re-enable clicks for HUD elements */
+  transition: all 0.3s ease;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  opacity: 0.8;
+  transform: scale(0.95);
 }
 
-.roll-dice-button:hover {
-  box-shadow: 3px 3px 6px #bebebe, -3px -3px 6px #ffffff;
+.player-corner.is-current {
+  opacity: 1;
+  transform: scale(1);
+  box-shadow: 0 0 20px currentColor, inset 0 0 10px currentColor;
+  border-color: currentColor;
 }
 
-.roll-dice-button:active {
-  box-shadow: inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff; /* Pressed effect */
+.player-corner.is-winner {
+  border-color: var(--color-secondary);
+  box-shadow: 0 0 30px var(--color-secondary), inset 0 0 15px var(--color-secondary);
+  animation: pulse-winner 2s infinite;
 }
 
-.toggles-section {
+/* Positions */
+.top-left { top: 20px; left: 20px; }
+.top-right { top: 20px; right: 20px; }
+.bottom-left { bottom: 20px; left: 20px; }
+.bottom-right { bottom: 20px; right: 20px; }
+
+/* Mobile Adjustments: stack them or make them smaller */
+@media (max-width: 900px) {
+  .player-corner {
+    width: 140px;
+    padding: 8px;
+  }
+  .top-left { top: 10px; left: 10px; }
+  .top-right { top: 10px; right: 10px; }
+  /* Ensure bottom HUDs don't overlap global controls */
+  .bottom-left { top: 100px; left: 10px; bottom: auto; }
+  .bottom-right { top: 100px; right: 10px; bottom: auto; }
+}
+
+/* Colors for the currentColor trick */
+.color-red { color: var(--color-accent); }
+.color-green { color: var(--color-success); }
+.color-blue { color: var(--color-primary); }
+.color-yellow { color: var(--color-secondary); }
+
+/* HUD Content Layout */
+.corner-hud-content {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  width: 100%;
-  align-items: center;
 }
 
-.toggle-label {
+.avatar-section {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  font-size: 1em;
-  color: var(--color-text);
-  position: relative;
-  padding-left: 50px; /* Space for custom toggle switch */
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  gap: 15px;
 }
 
-.toggle-label input {
+.player-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  font-weight: 900;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+  position: relative;
+  overflow: hidden;
+}
+
+.player-avatar::after {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 50%;
+  background: linear-gradient(rgba(255,255,255,0.3), transparent);
+}
+
+.player-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.player-name {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px currentColor;
+  color: #fff;
+}
+
+.player-reverse-left {
+  font-size: 0.8rem;
+  color: #aaa;
+  font-family: monospace;
+}
+
+/* Active Controls (Dice & Toggle) */
+.active-player-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding-top: 15px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.dice-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 80px;
+}
+
+/* Neon Toggle Switch */
+.neon-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 5px currentColor;
+}
+
+.neon-toggle input {
   opacity: 0;
   width: 0;
   height: 0;
 }
 
-.toggle-label .slider {
-  position: absolute;
-  cursor: pointer;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: #e0e0e0;
-  transition: .4s;
+.neon-toggle .slider {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 24px;
+  background-color: rgba(255, 255, 255, 0.1);
   border-radius: 34px;
-  width: 40px;
-  height: 20px;
-  box-shadow: inset 2px 2px 5px #bebebe, inset -2px -2px 5px #ffffff; 
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  transition: .4s;
 }
 
-.toggle-label .slider:before {
+.neon-toggle .slider:before {
   position: absolute;
   content: "";
   height: 16px;
   width: 16px;
-  left: 2px;
-  bottom: 2px;
-  background-color: #e0e0e0;
-  transition: .4s;
+  left: 4px;
+  bottom: 3px;
+  background-color: #fff;
   border-radius: 50%;
-  box-shadow: 2px 2px 4px #bebebe, -2px -2px 4px #ffffff; 
+  transition: .4s;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
 }
 
-.toggle-label input:checked + .slider {
-  background-color: #66bb6a; 
-  box-shadow: inset 2px 2px 5px #4c8c4f, inset -2px -2px 5px #80ec85;
+.neon-toggle input:checked + .slider {
+  background-color: currentColor;
+  box-shadow: 0 0 10px currentColor;
 }
 
-.toggle-label input:checked + .slider:before {
-  transform: translateX(20px);
-  box-shadow: 2px 2px 4px #4c8c4f, -2px -2px 4px #80ec85;
+.neon-toggle input:checked + .slider:before {
+  transform: translateX(26px);
+  background-color: #fff;
+}
+
+.winner-badge {
+  text-align: center;
+  font-weight: 900;
+  font-size: 1.5rem;
+  color: var(--color-secondary);
+  text-shadow: 0 0 10px var(--color-secondary), 0 0 20px var(--color-secondary);
+  letter-spacing: 4px;
+}
+
+/* Global Controls (Bottom Center) */
+.global-controls {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  padding: 10px 20px;
+  border-radius: 30px;
+  pointer-events: auto;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  z-index: 30;
+}
+
+@media (max-width: 900px) {
+  .global-controls {
+    bottom: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 15px;
+  }
 }
 
 .manual-dice-section {
   display: flex;
   gap: 10px;
-  width: 100%;
-  justify-content: center;
-  align-items: center;
 }
 
 .manual-dice-input {
   width: 80px;
-  padding: 10px;
-  border: none;
-  border-radius: 15px;
-  background-color: #e0e0e0;
-  box-shadow: inset 3px 3px 6px #bebebe, inset -3px -3px 6px #ffffff; /* Pressed-in effect */
-  font-size: 1em;
-  color: #333;
-  text-align: center;
+  background: rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-primary);
+  color: var(--color-primary);
+  padding: 8px 12px;
+  border-radius: 8px;
   outline: none;
+  font-family: monospace;
+  font-size: 1rem;
+  text-align: center;
+  box-shadow: inset 0 0 5px var(--color-primary);
 }
 
-.set-manual-dice-button {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 15px;
-  background-color: #e0e0e0;
-  box-shadow: 3px 3px 6px #bebebe, -3px -3px 6px #ffffff; /* Extruded effect */
-  font-size: 1em;
-  color: #333;
+.manual-dice-input::placeholder {
+  color: rgba(0, 240, 255, 0.4);
+}
+
+.cyber-button {
+  background: transparent;
+  border: 1px solid;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-family: 'Orbitron', sans-serif;
+  font-weight: 700;
   cursor: pointer;
-  transition: all 0.2s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: all 0.2s;
 }
 
-.set-manual-dice-button:hover {
-  box-shadow: 1px 1px 2px #bebebe, -1px -1px 2px #ffffff;
+.hack-btn {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  box-shadow: 0 0 10px rgba(0, 240, 255, 0.2), inset 0 0 5px rgba(0, 240, 255, 0.2);
 }
 
-.set-manual-dice-button:active {
-  box-shadow: inset 2px 2px 4px #bebebe, inset -2px -2px 4px #ffffff; /* Pressed effect */
+.hack-btn:hover:not(:disabled) {
+  background: var(--color-primary);
+  color: #000;
+  box-shadow: 0 0 15px var(--color-primary);
 }
 
+.reset-btn {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  box-shadow: 0 0 10px rgba(255, 0, 60, 0.2), inset 0 0 5px rgba(255, 0, 60, 0.2);
+}
+
+.reset-btn:hover {
+  background: var(--color-accent);
+  color: #fff;
+  box-shadow: 0 0 15px var(--color-accent);
+}
+
+.cyber-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  filter: grayscale(1);
+}
+
+@keyframes pulse-winner {
+  0% { box-shadow: 0 0 20px var(--color-secondary), inset 0 0 10px var(--color-secondary); transform: scale(1); }
+  50% { box-shadow: 0 0 40px var(--color-secondary), inset 0 0 20px var(--color-secondary); transform: scale(1.05); }
+  100% { box-shadow: 0 0 20px var(--color-secondary), inset 0 0 10px var(--color-secondary); transform: scale(1); }
+}
 .game-actions-section {
   width: 100%;
   display: flex;

@@ -1,39 +1,57 @@
 .dice {
   width: 80px;
-  height: 80px;
-  background-color: var(--color-surface);
-  border-radius: 15px;
+  height: 100px;
+  background-color: rgba(255, 255, 255, 0.05) !important;
+  border-radius: 12px;
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 36px;
-  font-weight: bold;
-  color: var(--color-primary);
-  box-shadow: 0 4px 16px 0 #2f80ed22, 0 1.5px 4px 0 #23272f11;
-  transition: box-shadow 0.18s;
+  font-size: 40px;
+  font-weight: 900;
+  font-family: 'Orbitron', monospace;
+  color: #fff !important;
+  box-shadow: 0 0 20px currentColor, inset 0 0 20px currentColor;
+  border: 2px solid currentColor;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  position: relative;
+  overflow: hidden;
+  text-shadow: 0 0 5px currentColor;
+  transform-style: preserve-3d;
 }
+
+.dice::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: currentColor;
+  opacity: 0.15;
+  pointer-events: none;
+}
+
 .dice:hover, .dice:focus {
-  box-shadow: 0 6px 24px 0 #2f80ed44, 0 2px 8px 0 #23272f22;
+  box-shadow: 0 0 30px currentColor, inset 0 0 30px currentColor;
+  transform: scale(1.05);
 }
 
 .dice.rolling {
-  animation: roll 0.5s ease-in-out;
+  animation: shuffle 0.4s linear infinite;
+  pointer-events: none;
 }
 
-@keyframes roll {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+@keyframes shuffle {
+  0% { transform: perspective(400px) rotateY(0deg) scale(1); filter: blur(0px); }
+  25% { transform: perspective(400px) rotateY(180deg) scale(1.1); filter: blur(2px); }
+  50% { transform: perspective(400px) rotateY(360deg) scale(1); filter: blur(0px); }
+  75% { transform: perspective(400px) rotateY(540deg) scale(1.1); filter: blur(2px); }
+  100% { transform: perspective(400px) rotateY(720deg) scale(1); filter: blur(0px); }
 }
 
 @media (max-width: 600px) {
   .dice {
-    width: 48px;
-    height: 48px;
-    font-size: 22px;
+    width: 60px;
+    height: 75px;
+    font-size: 32px;
     border-radius: 8px;
   }
 }

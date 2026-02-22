@@ -2,7 +2,6 @@ import React from 'react';
 import Dice from './Dice';
 import './ControlPanel.css';
 
-
 const playerColorMap = {
   1: 'red',
   2: 'green',
@@ -10,25 +9,76 @@ const playerColorMap = {
   4: 'blue',
 };
 
-function PlayerAvatar({ color, name, isCurrent, isWinner, reverseCount }) {
-  // Set text color to dark for yellow, white otherwise
+const positionClassMap = {
+  1: 'bottom-left', // Red
+  2: 'top-left',    // Green
+  3: 'top-right',   // Yellow
+  4: 'bottom-right',// Blue
+};
+
+function PlayerCorner({ 
+  positionClass, 
+  color, 
+  name, 
+  isCurrent, 
+  isWinner, 
+  reverseCount, 
+  // Dice props
+  diceValue, 
+  rolling, 
+  rollDice, 
+  possibleMoves,
+  // Toggle props
+  isReverseMode,
+  setIsReverseMode,
+  showReverseToggle
+}) {
   const textColor = color === 'yellow' ? '#222' : '#fff';
+
   return (
-    <div className="player-avatar-container">
-      <div
-        className="player-avatar"
-        style={{
-          background: color,
-          border: isCurrent ? '3px solid #2f80ed' : '2px solid #fff',
-          boxShadow: isWinner ? '0 0 0 4px #ffe066' : undefined,
-          opacity: isWinner ? 1 : isCurrent ? 1 : 0.7,
-        }}
-        title={name}
-        aria-label={isWinner ? `${name} (Winner)` : isCurrent ? `${name} (Current Turn)` : name}
-      >
-        <span className="player-avatar-label" style={{ color: textColor }}>{name[0]}</span>
+    <div className={`player-corner ${positionClass} ${isCurrent ? 'is-current' : ''} ${isWinner ? 'is-winner' : ''} color-${color}`}>
+      <div className="corner-hud-content">
+        <div className="avatar-section">
+          <div className="player-avatar" style={{ background: isWinner ? 'var(--color-secondary)' : color }}>
+             <span className="player-avatar-label" style={{ color: textColor }}>{name[0].toUpperCase()}</span>
+          </div>
+          <div className="player-info">
+             <div className="player-name">{name}</div>
+             <div className="player-reverse-left">Reverse: {reverseCount}</div>
+          </div>
+        </div>
+
+        {isWinner && <div className="winner-badge">WINNER</div>}
+
+        {isCurrent && !isWinner && (
+           <div className="active-player-controls">
+              <div className="dice-container">
+                 <Dice 
+                   value={diceValue} 
+                   rolling={rolling} 
+                   color={color} 
+                   onClick={rollDice} 
+                   disabled={rolling || (diceValue && possibleMoves && possibleMoves.length > 0)} 
+                 />
+              </div>
+              
+              <div className="toggle-wrapper" style={{ minHeight: '30px' }}>
+                {showReverseToggle && reverseCount > 0 && diceValue && (
+                  <label className="toggle-label neon-toggle">
+                    <input
+                      type="checkbox"
+                      checked={isReverseMode}
+                      onChange={() => setIsReverseMode(!isReverseMode)}
+                      disabled={!diceValue || reverseCount === 0}
+                    />
+                    <span className="slider"></span>
+                    Reverse
+                  </label>
+                )}
+              </div>
+           </div>
+        )}
       </div>
-      <div className="player-reverse-count">{reverseCount}</div>
     </div>
   );
 }
@@ -45,92 +95,66 @@ const ControlPanel = ({
   setManualDiceValue,
   rollDice,
   resetGame,
-  showGrid,
-  setShowGrid,
   setDiceManually,
   winner,
   numPlayers,
   showReverseToggle,
   possibleMoves,
 }) => {
-  const currentPlayerName = playerNames[currentPlayer];
-  const currentPlayerColor = playerColorMap[currentPlayer];
-  const reverseCount = playerStats[currentPlayer]?.reverseCount;
-
   return (
     <div className="control-panel-wrapper">
-      <div className="control-panel">
-        <div className="player-status-bar">
-          {[1,2,3,4].slice(0, numPlayers).map((i) => (
-            <PlayerAvatar
-              key={i}
-              color={playerColorMap[i]}
-              name={playerNames[i]}
-              isCurrent={currentPlayer === i}
-              isWinner={winner === playerNames[i]}
-              reverseCount={playerStats[i]?.reverseCount}
-            />
-          ))}
-        </div>
-        <div className="player-turn-indicator" aria-live="polite">
-          {winner ? (
-            <h2 style={{ color: '#ffe066' }}>{winner} Wins!</h2>
-          ) : (
-            <h2 style={{ color: currentPlayerColor }}>{`${currentPlayerName}'s Turn`}</h2>
-          )}
-        </div>
+      {/* Render 4 corners */}
+      {[1, 2, 3, 4].slice(0, numPlayers).map((i) => (
+        <PlayerCorner
+          key={i}
+          positionClass={positionClassMap[i]}
+          color={playerColorMap[i]}
+          name={playerNames[i]}
+          isCurrent={currentPlayer === i}
+          isWinner={winner === playerNames[i]}
+          reverseCount={playerStats[i]?.reverseCount}
+          
+          diceValue={diceValue}
+          rolling={rolling}
+          rollDice={rollDice}
+          possibleMoves={possibleMoves}
+          
+          isReverseMode={isReverseMode}
+          setIsReverseMode={setIsReverseMode}
+          showReverseToggle={showReverseToggle}
+        />
+      ))}
 
-        <div className="dice-display-area">
-          <Dice value={diceValue} rolling={rolling} color={currentPlayerColor} onClick={rollDice} disabled={rolling || !!winner || (diceValue && possibleMoves && possibleMoves.length > 0)} />
-        </div>
-
-        <div className="toggles-section">
-          <label className="toggle-label" aria-label="Toggle Reverse Game">
-            <input
-              type="checkbox"
-              checked={isReverseMode}
-              onChange={() => setIsReverseMode(!isReverseMode)}
-              aria-checked={isReverseMode}
-              disabled={!diceValue || !!winner || reverseCount === 0}
-            />
-            <span className="slider"></span>
-            Reverse Game ({reverseCount} left)
-          </label>
-        </div>
-
+      {/* Floating Center Bottom HUD for manual dice and reset button */}
+      <div className="global-controls">
         <div className="manual-dice-section">
           <input
             type="number"
             value={manualDiceValue}
             onChange={(e) => setManualDiceValue(e.target.value)}
             className="manual-dice-input"
-            placeholder="Manual"
-            aria-label="Set dice manually"
+            placeholder="Hack Dice"
             disabled={!!winner}
           />
           <button
             onClick={() => setDiceManually(manualDiceValue)}
-            className="set-manual-dice-button"
-            aria-label="Set manual dice value"
+            className="cyber-button hack-btn"
             disabled={!!winner}
           >
-            Set
+            EXEC
           </button>
         </div>
 
-        <div className="game-actions-section">
-          <button
-            onClick={() => {
-              if (window.confirm('Are you sure you want to reset the game? All progress will be lost.')) {
-                resetGame();
-              }
-            }}
-            className="reset-game-button"
-            aria-label="Reset Game"
-          >
-            Reset Game
-          </button>
-        </div>
+        <button
+          onClick={() => {
+            if (window.confirm('WARNING: SYSTEM RESET. All progress will be lost. Proceed?')) {
+              resetGame();
+            }
+          }}
+          className="cyber-button reset-btn"
+        >
+          SYS.RESET
+        </button>
       </div>
     </div>
   );

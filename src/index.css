@@ -1,4 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&display=swap');
+
 body {
-  background-color: #e0e5ec;
-  font-family: 'Helvetica Neue', sans-serif;
+  background-color: #0b0c10;
+  background-image: linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 30px 30px;
+  font-family: 'Orbitron', 'Helvetica Neue', sans-serif;
+  min-height: 100vh;
 }

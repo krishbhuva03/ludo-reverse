@@ -1,38 +1,30 @@
 /* Highlight for possible move cells */
-
-/* Only border glows, not background, and does not block pointer events */
 .cell-highlight {
-  border: 3px solid #ffe066;
-  box-shadow: 0 0 8px 2px #ffe06699;
+  border: 2px solid var(--color-text-light);
+  box-shadow: 0 0 10px 2px var(--color-primary), inset 0 0 10px 2px var(--color-primary);
   z-index: 2;
   position: relative;
-  animation: cellHighlightBorderPulse 1s infinite alternate;
+  animation: cellHighlightBorderPulse 1.5s infinite alternate;
   pointer-events: none;
 }
 
 @keyframes cellHighlightBorderPulse {
-  0% { border-width: 3px; box-shadow: 0 0 8px 2px #ffe06699; }
-  100% { border-width: 6px; box-shadow: 0 0 18px 8px #ffe06655; }
+  0% { border-width: 2px; box-shadow: 0 0 5px 1px var(--color-primary), inset 0 0 5px 1px var(--color-primary); }
+  100% { border-width: 4px; box-shadow: 0 0 20px 5px var(--color-primary), inset 0 0 20px 5px var(--color-primary); }
 }
 
 /* Animate movable tokens */
 .token-animate {
-  animation: tokenBounce 0.7s infinite alternate;
-  outline: 2px solid #ffe066;
-  outline-offset: 2px;
+  animation: tokenBounce 0.5s infinite alternate;
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+  box-shadow: 0 0 20px #fff;
 }
 
 @keyframes tokenBounce {
   0% { transform: scale(1) translateY(0); }
-  100% { transform: scale(1.08) translateY(-6px); }
+  100% { transform: scale(1.15) translateY(-8px); }
 }
-/* Board.css - v1.0
-   - Path colors rotated (Top->Yellow, Right->Blue, Bottom->Red, Left->Green)
-   - Center made transparent; center triangles colored to match attached paths
-   - Safe stars: medium-gray rgba(180,180,180,0.9) and 65% size
-   - Debug toggle retained
-*/
-
 
 .board-wrap {
   width: min(80vw, 800px);
@@ -64,83 +56,65 @@
   grid-template-columns: repeat(15, 1fr);
   grid-template-rows: repeat(15, 1fr);
   gap: 2px;
-  background: #222;
+  background: rgba(0, 0, 0, 0.4);
   border-radius: 8px;
   padding: 6px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
   position: relative;
 }
 
 .cell {
-  background: #f6f6f6;
+  background: rgba(20, 25, 30, 0.6);
+  border: 1px solid rgba(0, 240, 255, 0.1);
   border-radius: 4px;
   position: relative;
   box-sizing: border-box;
+  transition: all 0.3s;
 }
 
-/* Home corner backgrounds (unchanged) */
-.home.green-home { background: #a8e6cf; }
-.home.yellow-home { background: #ffd3b6; }
-.home.blue-home { background: #b3d4fc; }
-.home.red-home { background: #ffb3b3; }
+/* Home corner backgrounds */
+.home.green-home { background: rgba(0, 255, 102, 0.15); border: 1px solid var(--color-success); box-shadow: inset 0 0 20px rgba(0, 255, 102, 0.2); }
+.home.yellow-home { background: rgba(252, 238, 10, 0.15); border: 1px solid var(--color-secondary); box-shadow: inset 0 0 20px rgba(252, 238, 10, 0.2); }
+.home.blue-home { background: rgba(0, 240, 255, 0.15); border: 1px solid var(--color-primary); box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.2);  }
+.home.red-home { background: rgba(255, 0, 60, 0.15); border: 1px solid var(--color-accent); box-shadow: inset 0 0 20px rgba(255, 0, 60, 0.2); }
 
-/* PATH COLORS (v1.0 rotation)
-   Top vertical stripe -> Yellow
-   Right horizontal stripe -> Blue
-   Bottom vertical stripe -> Red
-   Left horizontal stripe -> Green
-*/
-.path.yellow-path { background: #f3a712; }
-.path.blue-path { background: #2f80ed; }
-.path.red-path { background: #e63946; }
-.path.green-path { background: #39a56a; }
+/* PATH COLORS */
+.path.yellow-path { background: var(--color-secondary); box-shadow: 0 0 10px var(--color-secondary), inset 0 0 5px rgba(0,0,0,0.5); border-color: transparent; }
+.path.blue-path { background: var(--color-primary); box-shadow: 0 0 10px var(--color-primary), inset 0 0 5px rgba(0,0,0,0.5); border-color: transparent; }
+.path.red-path { background: var(--color-accent); box-shadow: 0 0 10px var(--color-accent), inset 0 0 5px rgba(0,0,0,0.5); border-color: transparent; }
+.path.green-path { background: var(--color-success); box-shadow: 0 0 10px var(--color-success), inset 0 0 5px rgba(0,0,0,0.5); border-color: transparent; }
 
 /* Center block must be transparent so triangles show through */
 .center-block {
   background: transparent;
+  border: none;
 }
 
-/* Simple medium-gray translucent safe stars (65% size) */
+/* Safe stars - Neon Reticle */
 .safe-star {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 65%;
-  height: 65%;
-  background: rgba(180, 180, 180, 0.9);
+  width: 70%;
+  height: 70%;
+  background: rgba(255, 255, 255, 0.8);
+  box-shadow: 0 0 15px #fff;
   clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  animation: safeStarPulse 2s infinite alternate;
 }
 
-/* Debug coordinate label (subtle) */
+@keyframes safeStarPulse {
+  0% { transform: translate(-50%, -50%) scale(1); filter: drop-shadow(0 0 2px #fff); }
+  100% { transform: translate(-50%, -50%) scale(1.1); filter: drop-shadow(0 0 10px var(--color-primary)); }
+}
+
+/* Debug labels */
 .debug-label {
-  position: absolute;
-  top: 2px;
-  left: 4px;
-  font-size: 0.55rem;
-  color: rgba(0, 0, 0, 0.35);
-  user-select: none;
-  pointer-events: none;
+  display: none;
 }
-
-/* Debug toggle button */
 .debug-toggle {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  padding: 6px 10px;
-  font-size: 0.7rem;
-  background: rgba(0, 0, 0, 0.6);
-  color: white;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: background 0.2s;
-  z-index: 10;
+  display: none;
 }
-.debug-toggle:hover { background: rgba(0, 0, 0, 0.8); }
-@media (max-width: 600px) { .debug-toggle { display: none; } }
-
 
 /* Centered home tokens */
 .home-tokens {
@@ -189,58 +163,59 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: bold;
+  font-weight: 900;
   color: #fff;
   font-size: 0.8rem;
   pointer-events: auto;
   box-sizing: border-box;
-  border: 1.5px solid #222;
   background: transparent;
   position: relative;
-  transition: box-shadow 0.18s, outline 0.18s;
+  transition: all 0.2s;
   outline: none;
+  border: none;
 }
+
+.token svg {
+  filter: drop-shadow(0 4px 6px rgba(0,0,0,0.5));
+}
+
 .token .token-label {
   position: absolute;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  font-size: 0.7rem;
-  font-weight: bold;
+  font-size: 0.8rem;
+  font-weight: 900;
+  font-family: 'Orbitron', sans-serif;
   pointer-events: none;
-  letter-spacing: 0.01em;
-}
-.token.movable:hover,
-.token.movable:focus {
-  box-shadow: 0 0 0 4px #2f80ed88, 0 2px 12px 0 #2f80ed33;
-  outline: 2.5px solid #2f80ed;
-  z-index: 3;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 3px rgba(0,0,0,0.8);
 }
 
-.token-red { background: #e63946; }
-.token-green { background: #39a56a; }
-.token-yellow { background: #f3a712; color: #222; }
-.token-blue { background: #2f80ed; }
+.token.movable:hover,
+.token.movable:focus {
+  z-index: 3;
+  transform: scale(1.1);
+}
+
+.token-red { color: #fff; }
+.token-green { color: #fff; }
+.token-yellow { color: #000; }
+.token-blue { color: #fff; }
 
 .token.movable {
   cursor: pointer;
-  box-shadow: 0 0 10px 5px rgba(0, 255, 0, 0.7);
 }
 
-.token-label { font-size: 0.65rem; }
-
-/* Center star: 4 flat triangles, colored to match new path mapping */
-/* Top triangle: yellow (connected to top path) */
-/* Right triangle: blue (connected to right path) */
-/* Bottom triangle: red (connected to bottom path) */
-/* Left triangle: green (connected to left path) */
+/* Center star */
 .center-star {
   position: absolute;
   width: calc((100% / 15) * 3);
   height: calc((100% / 15) * 3);
   left: calc(50% - ((100% / 15) * 3) / 2);
   top: calc(50% - ((100% / 15) * 3) / 2);
-  z-index: 5; /* ensure triangles are above cells */
+  z-index: 5; 
+  filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
 }
 
 .center-star .triangle {
@@ -251,22 +226,22 @@
 }
 
 .center-star .top {
-  background-color: #f3a712; /* yellow */
+  background-color: var(--color-secondary);
   clip-path: polygon(0% 0%, 100% 0%, 50% 50%);
 }
 
 .center-star .right {
-  background-color: #2f80ed; /* blue */
+  background-color: var(--color-primary);
   clip-path: polygon(100% 0%, 100% 100%, 50% 50%);
 }
 
 .center-star .bottom {
-  background-color: #e63946; /* red */
+  background-color: var(--color-accent);
   clip-path: polygon(100% 100%, 0% 100%, 50% 50%);
 }
 
 .center-star .left {
-  background-color: #39a56a; /* green */
+  background-color: var(--color-success);
   clip-path: polygon(0% 100%, 0% 0%, 50% 50%);
 }
 
@@ -295,26 +270,16 @@
   transform: translate(-50%, -50%);
   font-size: 1.2rem;
   font-weight: bold;
+  text-shadow: 0 0 5px currentColor;
 }
 
-.arrow.arrow-left { 
-  transform: translate(-50%, -50%) rotate(0deg);
-}
-
-.arrow.arrow-up { 
-  transform: translate(-50%, -50%) rotate(90deg);
-}
-
-.arrow.arrow-right { 
-  transform: translate(-50%, -50%) rotate(180deg);
-}
-
-.arrow.arrow-down { 
-  transform: translate(-50%, -50%) rotate(270deg);
-}
+.arrow.arrow-left { transform: translate(-50%, -50%) rotate(0deg); }
+.arrow.arrow-up { transform: translate(-50%, -50%) rotate(90deg); }
+.arrow.arrow-right { transform: translate(-50%, -50%) rotate(180deg); }
+.arrow.arrow-down { transform: translate(-50%, -50%) rotate(270deg); }
 
 /* Arrow Colors */
-.arrow.blue { color: #2f80ed; }
-.arrow.red { color: #e63946; }
-.arrow.green { color: #39a56a; }
-.arrow.yellow { color: #f3a712; }
+.arrow.blue { color: var(--color-primary); }
+.arrow.red { color: var(--color-accent); }
+.arrow.green { color: var(--color-success); }
+.arrow.yellow { color: var(--color-secondary); }
