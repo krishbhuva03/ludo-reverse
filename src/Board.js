@@ -135,8 +135,6 @@ function CyberHexagon({ colorString }) {
 }
 
 function Token({ color, number, isMovable, onClick, style, animate }) {
-  const textColor = color.toLowerCase() === 'yellow' ? '#fcee0a' : '#fff'; // ensure yellow text is readable / neon
-  
   return (
     <div
       className={`token token-${color.toLowerCase()} ${isMovable ? 'movable' : ''} ${animate ? 'token-animate' : ''}`}
