@@ -51,11 +51,12 @@ body {
 @media (max-width: 900px) {
   .app-container {
     flex-direction: column;
-    padding: 80px 10px 10px 10px; /* Leave space at top for panels */
-    min-height: auto;
+    padding: 140px 10px 140px 10px; /* Space for top and bottom player panels */
+    min-height: 100vh;
+    justify-content: center;
   }
   .board-area {
-    width: 100%;
-    margin-bottom: 200px; /* Space at bottom */
+    width: fit-content;
+    margin: 0 auto;
   }
 }

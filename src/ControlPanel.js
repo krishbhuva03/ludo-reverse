@@ -125,37 +125,6 @@ const ControlPanel = ({
         />
       ))}
 
-      {/* Floating Center Bottom HUD for manual dice and reset button */}
-      <div className="global-controls">
-        <div className="manual-dice-section">
-          <input
-            type="number"
-            value={manualDiceValue}
-            onChange={(e) => setManualDiceValue(e.target.value)}
-            className="manual-dice-input"
-            placeholder="Hack Dice"
-            disabled={!!winner}
-          />
-          <button
-            onClick={() => setDiceManually(manualDiceValue)}
-            className="cyber-button hack-btn"
-            disabled={!!winner}
-          >
-            EXEC
-          </button>
-        </div>
-
-        <button
-          onClick={() => {
-            if (window.confirm('WARNING: SYSTEM RESET. All progress will be lost. Proceed?')) {
-              resetGame();
-            }
-          }}
-          className="cyber-button reset-btn"
-        >
-          SYS.RESET
-        </button>
-      </div>
     </div>
   );
 };

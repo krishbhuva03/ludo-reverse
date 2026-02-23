@@ -175,14 +175,35 @@
 /* Mobile Adjustments: stack them or make them smaller */
 @media (max-width: 900px) {
   .player-corner {
-    width: 140px;
+    width: 130px;
     padding: 8px;
+  }
+  .corner-hud-content {
+    gap: 8px;
+  }
+  .avatar-section {
+    gap: 8px;
+  }
+  .player-avatar {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .player-name {
+    font-size: 0.9rem;
+  }
+  .active-player-controls {
+    padding-top: 8px;
+    gap: 8px;
+  }
+  .dice-container {
+    min-height: 55px;
   }
   .top-left { top: 10px; left: 10px; }
   .top-right { top: 10px; right: 10px; }
   /* Ensure bottom HUDs don't overlap global controls */
-  .bottom-left { top: 100px; left: 10px; bottom: auto; }
-  .bottom-right { top: 100px; right: 10px; bottom: auto; }
+  .bottom-left { top: auto; left: 10px; bottom: 85px; }
+  .bottom-right { top: auto; right: 10px; bottom: 85px; }
 }
 
 /* Colors for the currentColor trick */

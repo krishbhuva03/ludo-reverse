@@ -39,7 +39,7 @@
 
 @media (max-width: 600px) {
   .board-wrap {
-    width: 98vw;
+    width: min(95vw, 45vh);
     min-width: 0;
     margin: 4px auto;
   }
