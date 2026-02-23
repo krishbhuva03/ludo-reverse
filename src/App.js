@@ -38,6 +38,71 @@ function App() {
   // Store the static highlight cell for the last selected move
   const [playerStats, setPlayerStats] = useState({});
   const [lockedHighlightCell, setLockedHighlightCell] = useState(null);
+  const [isMuted, setIsMuted] = useState(false);
+
+  const playSound = (soundName) => {
+    if (isMuted) return;
+    try {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!window.gameAudioCtx) window.gameAudioCtx = new AudioContext();
+      const ctx = window.gameAudioCtx;
+      if (ctx.state === 'suspended') ctx.resume();
+
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+      
+      const now = ctx.currentTime;
+      
+      if (soundName === 'dice-roll') {
+        // A quick, rolling trill
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(300, now);
+        osc.frequency.linearRampToValueAtTime(500, now + 0.05);
+        osc.frequency.linearRampToValueAtTime(300, now + 0.1);
+        osc.frequency.linearRampToValueAtTime(600, now + 0.15);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.2, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } else if (soundName === 'token-move') {
+        // A short 'pop' sequence
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(600, now);
+        osc.frequency.exponentialRampToValueAtTime(300, now + 0.1);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.15, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now);
+        osc.stop(now + 0.1);
+      } else if (soundName === 'capture') {
+        // A low thud
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(150, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.3);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.3, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (soundName === 'home') {
+        // A pleasant winning chime
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        osc.frequency.setValueAtTime(600, now + 0.1);
+        osc.frequency.setValueAtTime(800, now + 0.2);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.15, now + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now);
+        osc.stop(now + 0.5);
+      }
+    } catch (e) {
+      console.warn('Web Audio synthesis failed:', e);
+    }
+  };
 
   useEffect(() => {
     const handleBeforeUnload = (event) => {
@@ -114,6 +179,7 @@ function App() {
 
   const rollDice = () => {
     setRolling(true);
+    playSound('dice-roll');
     setTimeout(() => {
       const manualValue = parseInt(manualDiceValue, 10);
       const value = (!isNaN(manualValue) && manualValue > 0)
@@ -182,6 +248,7 @@ function App() {
       if (captured) {
         newPositions[captured.color][captured.number] = 'home';
         aCaptureOccurred = true;
+        playSound('capture');
       }
       setTokenPositions(newPositions);
       setPossibleMoves([]);
@@ -197,6 +264,7 @@ function App() {
       let extraTurns = 0;
       if (newPositionId === finalCells[color]) {
         extraTurns += 1;
+        playSound('home');
       }
       if (diceValue === 6) {
         extraTurns += 1;
@@ -228,6 +296,7 @@ function App() {
 
     let currentPositions = { ...tokenPositions };
     for (let i = 0; i < steps.length; i++) {
+      playSound('token-move');
       const tempPositions = JSON.parse(JSON.stringify(currentPositions));
       tempPositions[color][tokenNumber] = steps[i];
       setTokenPositions(tempPositions);
@@ -259,6 +328,7 @@ function App() {
         if (token.color !== color) {
           newPositions[token.color][token.number] = 'home';
           aCaptureOccurred = true;
+          playSound('capture');
         }
       });
     }
@@ -266,6 +336,7 @@ function App() {
     if (captured) {
       newPositions[captured.color][captured.number] = 'home';
       aCaptureOccurred = true;
+      playSound('capture');
     }
     setTokenPositions(newPositions);
     setPossibleMoves([]);
@@ -281,6 +352,7 @@ function App() {
     let extraTurns = 0;
     if (newPositionId === finalCells[color]) {
       extraTurns += 1;
+      playSound('home');
     }
     if (diceValue === 6) {
       extraTurns += 1;
@@ -347,6 +419,8 @@ function App() {
         numPlayers={numPlayers}
         showReverseToggle={showReverseToggle}
         possibleMoves={possibleMoves}
+        isMuted={isMuted}
+        setIsMuted={setIsMuted}
       />
     </div>
   );

@@ -100,9 +100,20 @@ const ControlPanel = ({
   numPlayers,
   showReverseToggle,
   possibleMoves,
+  isMuted,
+  setIsMuted
 }) => {
   return (
     <div className="control-panel-wrapper">
+      {/* Sound Control Toggle */}
+      <button 
+        className="mute-btn"
+        onClick={() => setIsMuted(!isMuted)}
+        title={isMuted ? "Unmute Sound" : "Mute Sound"}
+      >
+        {isMuted ? '🔇' : '🔊'}
+      </button>
+
       {/* Render 4 corners */}
       {[1, 2, 3, 4].slice(0, numPlayers).map((i) => (
         <PlayerCorner

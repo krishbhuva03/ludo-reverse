@@ -470,3 +470,41 @@
 .reset-game-button:active {
   box-shadow: inset 3px 3px 6px #d1a0a0, inset -3px -3px 6px #ffffff; /* Pressed effect */
 }
+
+/* Sound Control Mute Toggle */
+.mute-btn {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--glass-bg);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border);
+  color: #fff;
+  font-size: 1.5rem;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 30;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+  transition: all 0.3s ease;
+}
+
+.mute-btn:hover {
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 0 15px var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+@media (max-width: 900px) {
+  .mute-btn {
+    top: 5px;
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+  }
+}
